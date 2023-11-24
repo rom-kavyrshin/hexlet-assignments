@@ -5,7 +5,22 @@ import java.util.*;
 // BEGIN
 public class App {
 
+    public static boolean scrabble(String symbols, String neededResult) {
+        var symbolList = new ArrayList<String>(Arrays.asList(symbols.split("")));
+        var neededResultList = new ArrayList<String>(Arrays.asList(neededResult.split("")));
 
+        for (String need : neededResultList) {
+            if (!(symbolList.remove(need.toLowerCase(Locale.ROOT)) || symbolList.remove(need.toUpperCase(Locale.ROOT)))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(scrabble("abc", "cab"));
+    }
 
     public static void queueTest() {
         Deque<String> stack = new LinkedList<>();
