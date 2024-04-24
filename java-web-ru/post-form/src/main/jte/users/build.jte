@@ -24,12 +24,6 @@
                 <input type="password" name="password" required>
             </label>
         </div>
-        <div>
-            <label>
-                Подтвердите пароль
-                <input type="password" name="passwordConfirmation" required>
-            </label>
-        </div>
         <input type="submit" value="Зарегистрировать">
     </form>
 `)

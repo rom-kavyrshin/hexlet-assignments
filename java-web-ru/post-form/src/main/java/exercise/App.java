@@ -44,14 +44,11 @@ public final class App {
             var lastname = context.formParam("lastname");
             var email = context.formParam("email");
             var password = context.formParam("password");
-            var passwordConfirmation = context.formParam("passwordConfirmation");
 
             if (isNullOrBlank(name)
                     || isNullOrBlank(lastname)
                     || isNullOrBlank(email)
                     || isNullOrBlank(password)
-                    || isNullOrBlank(passwordConfirmation)
-                    || !password.equals(passwordConfirmation)
             ) {
                 throw new BadRequestResponse();
             } else {
