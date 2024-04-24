@@ -3,13 +3,13 @@
         <div>
             <label>
                 Имя
-                <input type="text" name="name" required>
+                <input type="text" name="firstName" required>
             </label>
         </div>
         <div>
             <label>
                 Фамилия
-                <input type="text" name="lastname" required>
+                <input type="text" name="lastName" required>
             </label>
         </div>
         <div>
