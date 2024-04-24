@@ -40,8 +40,8 @@ public final class App {
         });
 
         app.post("/users", context -> {
-            var name = context.formParam("name");
-            var lastname = context.formParam("lastname");
+            var name = context.formParam("firstName");
+            var lastname = context.formParam("lastName");
             var email = context.formParam("email");
             var password = context.formParam("password");
 
