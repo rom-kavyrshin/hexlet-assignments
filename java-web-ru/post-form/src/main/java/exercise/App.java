@@ -1,14 +1,19 @@
 package exercise;
 
+import exercise.util.Security;
 import io.javalin.Javalin;
 import java.util.List;
+import java.util.Locale;
+
+import static exercise.util.Util.isNullOrBlank;
 import static io.javalin.rendering.template.TemplateUtil.model;
+
+import io.javalin.http.BadRequestResponse;
 import io.javalin.rendering.template.JavalinJte;
 import exercise.model.User;
 import exercise.dto.users.UsersPage;
 import exercise.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
-import exercise.util.Security;
 
 public final class App {
 
@@ -30,7 +35,37 @@ public final class App {
         });
 
         // BEGIN
-        
+        app.get("/users/build", context -> {
+            context.render("users/build.jte");
+        });
+
+        app.post("/users", context -> {
+            var name = context.formParam("name");
+            var lastname = context.formParam("lastname");
+            var email = context.formParam("email");
+            var password = context.formParam("password");
+            var passwordConfirmation = context.formParam("passwordConfirmation");
+
+            if (isNullOrBlank(name)
+                    || isNullOrBlank(lastname)
+                    || isNullOrBlank(email)
+                    || isNullOrBlank(password)
+                    || isNullOrBlank(passwordConfirmation)
+                    || !password.equals(passwordConfirmation)
+            ) {
+                throw new BadRequestResponse();
+            } else {
+                name = StringUtils.capitalize(name.trim());
+                lastname = StringUtils.capitalize(lastname.trim());
+                email = email.trim().toLowerCase(Locale.ROOT);
+                password = Security.encrypt(password);
+
+                var user = new User(name, lastname, email, password);
+                UserRepository.save(user);
+
+                context.redirect("/users");
+            }
+        });
         // END
 
         return app;
