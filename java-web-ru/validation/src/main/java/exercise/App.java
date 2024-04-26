@@ -40,16 +40,16 @@ public final class App {
         // BEGIN
         app.get("/articles/build", context -> {
             var buildArticlePage = new BuildArticlePage();
-            context.render("courses/build.jte", model("page", buildArticlePage));
+            context.render("articles/build.jte", model("page", buildArticlePage));
         });
 
-        app.post("/courses", context -> {
+        app.post("/articles", context -> {
             var titleValidator = context.formParamAsClass("title", String.class)
-                    .check(it -> !isNullOrBlank(it) && it.trim().length() > 2, VALIDATOR_TITLE_LENGTH_ERROR)
+                    .check(it -> !isNullOrBlank(it) && it.trim().length() >= 2, VALIDATOR_TITLE_LENGTH_ERROR)
                     .check(it -> !ArticleRepository.existsByTitle(it), VALIDATOR_TITLE_NOT_UNIQUE_ERROR);
 
             var contentValidator = context.formParamAsClass("content", String.class)
-                    .check(it -> !isNullOrBlank(it) && it.trim().length() > 10, VALIDATOR_CONTENT_LENGTH_ERROR);
+                    .check(it -> !isNullOrBlank(it) && it.trim().length() >= 10, VALIDATOR_CONTENT_LENGTH_ERROR);
 
             try {
                 collectValidatorErrors(titleValidator, contentValidator);
@@ -66,7 +66,7 @@ public final class App {
                 var content = context.formParam("content");
 
                 var buildArticlePage = new BuildArticlePage(title, content, exception.getErrors());
-                context.render("courses/build.jte", model("page", buildArticlePage));
+                context.render("articles/build.jte", model("page", buildArticlePage));
             }
         });
         // END
