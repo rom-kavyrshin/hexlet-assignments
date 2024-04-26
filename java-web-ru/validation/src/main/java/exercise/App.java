@@ -13,6 +13,7 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 import io.javalin.rendering.template.JavalinJte;
 
 import exercise.repository.ArticleRepository;
+import org.eclipse.jetty.http.HttpStatus;
 
 public final class App {
 
@@ -66,7 +67,7 @@ public final class App {
                 var content = context.formParam("content");
 
                 var buildArticlePage = new BuildArticlePage(title, content, exception.getErrors());
-                context.render("articles/build.jte", model("page", buildArticlePage));
+                context.render("articles/build.jte", model("page", buildArticlePage)).status(HttpStatus.UNPROCESSABLE_ENTITY_422);
             }
         });
         // END
