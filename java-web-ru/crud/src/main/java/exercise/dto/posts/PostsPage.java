@@ -8,7 +8,13 @@ import lombok.Getter;
 
 
 // BEGIN
-
+@AllArgsConstructor
+@Getter
+public class PostsPage {
+    private long currentPage;
+    private boolean hasNextPage;
+    private List<Post> postList;
+}
 // END
 
 
