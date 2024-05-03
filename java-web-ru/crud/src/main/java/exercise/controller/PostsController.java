@@ -34,7 +34,7 @@ public class PostsController {
     }
 
     public static void show(Context context) {
-        long postId = context.pathParamAsClass("id", Integer.class).getOrDefault(-1);
+        long postId = context.pathParamAsClass("id", Long.class).getOrDefault(-1L);
 
         var courseOptional = PostRepository.find(postId);
 

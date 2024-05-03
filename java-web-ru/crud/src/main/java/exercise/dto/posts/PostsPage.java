@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PostsPage {
-    private long currentPage;
+    private int currentPage;
     private boolean hasNextPage;
     private List<Post> postList;
 }

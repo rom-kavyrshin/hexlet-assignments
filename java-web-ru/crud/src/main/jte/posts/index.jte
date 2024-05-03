@@ -17,6 +17,18 @@
                         </li>
                     @endfor
                 </ul>
+                <div>
+                    <a href="${
+                        page.getCurrentPage() > 1 ?
+                        NamedRoutes.postsPath(page.getCurrentPage() - 1) :
+                        ""
+                    }">❮ Previous</a>
+                    <a href="${
+                        page.isHasNextPage() ?
+                        NamedRoutes.postsPath(page.getCurrentPage() + 1) :
+                        ""
+                    }">Next ❯</a>
+                </div>
             @endif
         </main>
     </div>
