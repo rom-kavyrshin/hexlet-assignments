@@ -13,7 +13,7 @@
                 ${page.getPost().getBody()}
             </div>
             <!-- BEGIN -->
-            
+            <a href="${NamedRoutes.editPostPath(page.getPost().getId())}">Редактировать</a>
             <!-- END -->
         </main>
     `

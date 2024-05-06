@@ -15,6 +15,15 @@ public class PostRepository {
         }
     }
 
+    public static void update(Post post) {
+        if (post.getId() != null) {
+            find(post.getId()).ifPresent(it -> {
+                it.setName(post.getName());
+                it.setBody(post.getBody());
+            });
+        }
+    }
+
     public static List<Post> search(String term) {
         var posts = entities.stream()
                 .filter(entity -> entity.getName().startsWith(term))

@@ -13,6 +13,8 @@ import io.javalin.http.Context;
 import io.javalin.validation.ValidationException;
 import io.javalin.http.NotFoundResponse;
 
+import java.util.HashMap;
+
 public class PostsController {
 
     public static void build(Context ctx) {
@@ -58,6 +60,41 @@ public class PostsController {
     }
 
     // BEGIN
-    
+    public static void edit(Context ctx) {
+        long postId = ctx.pathParamAsClass("id", Long.class).getOrDefault(-1L);
+
+        var postOptional = PostRepository.find(postId);
+
+        postOptional.ifPresentOrElse((it) -> {
+            var page = new EditPostPage(it.getId(), it.getName(), it.getBody(), new HashMap<>());
+            ctx.render("posts/edit.jte", model("page", page));
+        }, () -> {
+            throw new NotFoundResponse("Course not found");
+        });
+    }
+
+    public static void update(Context ctx) {
+        long postId = ctx.pathParamAsClass("id", Long.class).getOrDefault(-1L);
+
+        try {
+            var name = ctx.formParamAsClass("name", String.class)
+                    .check(value -> value.length() >= 2, "Название не должно быть короче двух символов")
+                    .get();
+
+            var body = ctx.formParamAsClass("body", String.class)
+                    .check(value -> value.length() >= 10, "Пост должен быть не короче 10 символов")
+                    .get();
+
+            var post = new Post(postId, name, body);
+            PostRepository.update(post);
+            ctx.redirect(NamedRoutes.postsPath());
+        } catch (ValidationException e) {
+            var name = ctx.formParam("name");
+            var body = ctx.formParam("body");
+            var page = new EditPostPage(postId, name, body, e.getErrors());
+            ctx.render("posts/edit.jte", model("page", page)).status(422);
+        }
+    }
+
     // END
 }
