@@ -15,7 +15,8 @@ public final class App {
         });
 
         // BEGIN
-        
+        app.get(NamedRoutes.buildUserPath(), UsersController::build);
+        app.post(NamedRoutes.usersPath(), UsersController::create);
         // END
 
         app.get(NamedRoutes.userPath("{id}"), UsersController::show);
