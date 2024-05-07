@@ -1,4 +1,4 @@
-@import exercise.util.NamedRoutes;
+@import exercise.util.NamedRoutes
 @import exercise.dto.users.BuildUserPage
 @param BuildUserPage page
 
