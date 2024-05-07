@@ -50,8 +50,11 @@ public class UsersController {
             var email = emailValidator.get().trim().toLowerCase(Locale.ROOT);
             var password = passwordValidator.get();
 
-            var user = new User(firstName, lastName, email, Security.encrypt(password), Security.generateToken());
+            var secureToken = Security.generateToken();
+            var user = new User(firstName, lastName, email, Security.encrypt(password), secureToken);
             UserRepository.save(user);
+
+            context.cookie(TOKEN_COOKIE_KEY, secureToken);
 
             context.redirect(NamedRoutes.userPath(user.getId()));
         } catch (ValidationException exception) {
@@ -66,11 +69,15 @@ public class UsersController {
 
     public static void show(Context context) {
         long userId = context.pathParamAsClass("id", Long.class).getOrDefault(-1L);
-        var userOptional = UserRepository.find(userId);
+        var secureToken = context.cookie(TOKEN_COOKIE_KEY);
 
-        userOptional.ifPresentOrElse((it) -> {
-            var page = new UserPage(it);
-            context.render("users/show.jte", model("page", page));
+        UserRepository.find(userId).ifPresentOrElse((it) -> {
+            if (it.getToken().equals(secureToken)) {
+                var page = new UserPage(it);
+                context.render("users/show.jte", model("page", page));
+            } else {
+                context.redirect(NamedRoutes.buildUserPath());
+            }
         }, () -> {
             throw new NotFoundResponse("User not found");
         });
