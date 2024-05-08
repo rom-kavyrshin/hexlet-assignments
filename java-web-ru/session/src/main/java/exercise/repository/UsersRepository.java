@@ -1,6 +1,8 @@
 package exercise.repository;
 
 import java.util.List;
+import java.util.Optional;
+
 import exercise.model.User;
 import exercise.util.Generator;
 
@@ -25,11 +27,10 @@ public class UsersRepository {
                 .orElse(null);
     }
 
-    public static User findByName(String name) {
+    public static Optional<User> findByName(String name) {
         return entities.stream()
                 .filter(entity -> entity.getName().equals(name))
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     public static boolean existsByName(String name) {

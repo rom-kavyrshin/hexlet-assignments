@@ -1,5 +1,6 @@
 package exercise;
 
+import exercise.controller.RootController;
 import io.javalin.Javalin;
 import exercise.controller.SessionsController;
 import exercise.util.NamedRoutes;
@@ -16,7 +17,10 @@ public final class App {
         });
 
         // BEGIN
-        
+        app.get(NamedRoutes.rootPath(), RootController::index);
+        app.get(NamedRoutes.buildSessionPath(), SessionsController::build);
+        app.post(NamedRoutes.loginPath(), SessionsController::create);
+        app.post(NamedRoutes.logoutPath(), SessionsController::destroy);
         // END
 
         return app;
