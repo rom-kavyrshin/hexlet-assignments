@@ -16,7 +16,7 @@
         <div>
             <label>
                 Nickname
-                <input required type="text" name="login" value="${page.getName()}">
+                <input required type="text" name="name" value="${page.getName()}">
             </label>
         </div>
         <div>
