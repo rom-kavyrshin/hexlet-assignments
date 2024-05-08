@@ -24,7 +24,7 @@ public class SessionsController {
     }
 
     public static void create(Context context) {
-        var loginValidator = context.formParamAsClass("login", String.class)
+        var loginValidator = context.formParamAsClass("name", String.class)
                 .check(it -> !isNullOrBlank(it), "Имя пользователя не должно быть пустым")
                 .check(UsersRepository::existsByName, VALIDATOR_WRONG_USERNAME_OR_PASSWORD);
 
