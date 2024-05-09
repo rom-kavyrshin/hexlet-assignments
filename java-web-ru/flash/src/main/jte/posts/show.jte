@@ -3,7 +3,7 @@
 @param PostPage page
 
 @template.layout.page(
-
+    page = page,
     content = @`
         <div class="mb-3">
             <h1>${page.getPost().getName()}</h1>

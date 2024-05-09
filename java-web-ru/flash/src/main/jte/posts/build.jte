@@ -1,8 +1,9 @@
 @import exercise.dto.posts.BuildPostPage
+@import exercise.util.NamedRoutes
 @param BuildPostPage page
 
 @template.layout.page(
-
+    page = page,
     content = @`
         @if(page.getErrors() != null)
             <div class="mb-3">
@@ -17,7 +18,7 @@
         @endif
 
         <div class="mx-auto p-4 py-md-5">
-            <form action="/posts" method="post">
+            <form action="${NamedRoutes.postsPath()}" method="post">
                 <div class="mb-3">
                     <label class="form-label">
                         Название
