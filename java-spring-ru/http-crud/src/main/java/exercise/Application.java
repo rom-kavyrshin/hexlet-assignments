@@ -27,6 +27,39 @@ public class Application {
     }
 
     // BEGIN
-    
+    @GetMapping("/posts")
+    public List<Post> index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
+        var skip = (page - 1) * limit;
+        return posts.stream().skip(skip).limit(limit).toList();
+    }
+
+    @GetMapping("/posts/{id}")
+    public Optional<Post> show(@PathVariable String id) {
+        return posts.stream().filter(it -> it.getId().equals(id)).findFirst();
+    }
+
+    @PostMapping("/posts")
+    public Post create(@RequestBody Post newPost) {
+        posts.add(newPost);
+        return newPost;
+    }
+
+    @PutMapping("/posts/{id}")
+    public Post update(@PathVariable String id, @RequestBody Post patchPost) {
+        var oldPostOptional = posts.stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst();
+
+        oldPostOptional.ifPresent(it -> {
+            it.setTitle(patchPost.getTitle());
+            it.setBody(patchPost.getBody());
+        });
+        return patchPost;
+    }
+
+    @DeleteMapping("/posts/{id}")
+    public void destroy(@PathVariable String id) {
+        posts.removeIf(it -> it.getId().equals(id));
+    }
     // END
 }
