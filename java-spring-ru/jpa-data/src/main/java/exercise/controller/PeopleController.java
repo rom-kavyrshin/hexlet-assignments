@@ -2,6 +2,8 @@ package exercise.controller;
 
 import exercise.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,21 @@ public class PeopleController {
     }
 
     // BEGIN
-    
+    @GetMapping()
+    public List<Person> index() {
+        return personRepository.findAll();
+    }
+
+    @PostMapping()
+    public ResponseEntity<Person> create(@RequestBody @Validated Person person) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(personRepository.save(person));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public void delete(@PathVariable long id) {
+        personRepository.deleteById(id);
+    }
     // END
 }

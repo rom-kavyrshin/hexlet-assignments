@@ -1,12 +1,20 @@
+import org.gradle.api.internal.artifacts.dsl.dependencies.DependenciesExtensionModule.module
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     application
+    id("idea")
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.3"
     id("com.github.ben-manes.versions") version "0.48.0"
     id("io.freefair.lombok") version "8.6"
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+    }
 }
 
 group = "exercise"
@@ -21,7 +29,7 @@ repositories {
 
 dependencies {
     // BEGIN
-    
+    runtimeOnly("com.h2database:h2")
     // END
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
