@@ -1,6 +1,7 @@
 package exercise.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,15 @@ public class ProductsController {
     }
 
     // BEGIN
-    
+    @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product create(@RequestBody Product productData) {
+        if (productRepository.findByTitleAndPrice(productData.getTitle(), productData.getPrice()) != null) {
+            throw new ResourceAlreadyExistsException("Product already exist");
+        } else {
+            return productRepository.save(productData);
+        }
+    }
     // END
 
     @GetMapping(path = "/{id}")
