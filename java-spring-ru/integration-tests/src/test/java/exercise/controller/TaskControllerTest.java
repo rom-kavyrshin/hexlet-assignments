@@ -150,6 +150,9 @@ class ApplicationTest {
         mockMvc.perform(delete("/tasks/" + task.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
+
+        task = taskRepository.findById(task.getId()).orElse(null);
+        assertThat(task).isNull();
     }
     // END
 }
