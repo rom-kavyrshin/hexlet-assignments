@@ -26,7 +26,42 @@ public class ProductsController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductMapper productMapper;
+
     // BEGIN
-    
+    @GetMapping(path = "")
+    public List<ProductDTO> index() {
+        var products = productRepository.findAll();
+        return products.stream()
+                .map(productMapper::map)
+                .toList();
+    }
+
+    @GetMapping(path = "/{id}")
+    public ProductDTO show(@PathVariable long id) {
+        return productRepository.findById(id)
+                .map(productMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
+    }
+
+    @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDTO create(@RequestBody ProductCreateDTO productData) {
+        var product = productMapper.map(productData);
+        productRepository.save(product);
+        return productMapper.map(product);
+    }
+
+    @PutMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDTO update(@RequestBody ProductUpdateDTO productData, @PathVariable long id) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
+
+        productMapper.update(productData, product);
+        productRepository.save(product);
+        return productMapper.map(product);
+    }
     // END
 }
