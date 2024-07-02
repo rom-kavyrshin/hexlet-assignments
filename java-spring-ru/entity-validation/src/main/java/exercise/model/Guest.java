@@ -1,5 +1,6 @@
 package exercise.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -36,6 +37,7 @@ public class Guest {
     @Email
     private String email;
 
+    @Column(unique = true)
     @Pattern(regexp = "^\\+(\\d{11,13})$")
     private String phoneNumber;
 
