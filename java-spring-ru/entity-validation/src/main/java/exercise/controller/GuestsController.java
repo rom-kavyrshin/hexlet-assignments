@@ -45,7 +45,11 @@ public class GuestsController {
         return guestDto;
     }
 
-    // BEGIN
-    
-    // END
+    @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public GuestDTO create(@RequestBody @Valid GuestCreateDTO productData) {
+        var product = guestMapper.map(productData);
+        guestRepository.save(product);
+        return guestMapper.map(product);
+    }
 }
