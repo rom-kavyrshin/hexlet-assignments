@@ -1,5 +1,6 @@
 package exercise.dto;
 
+import exercise.validation.HasLetters;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 public class GuestCreateDTO {
     @NotBlank
+    //@HasLetters
     private String name;
 
     @Email
