@@ -14,8 +14,10 @@ public class CarUpdateDTO {
 
     private JsonNullable<String> model;
 
+    @NotNull
     private JsonNullable<String> manufacturer;
 
+    @NotNull
     @PositiveOrZero
     private JsonNullable<Integer> enginePower;
 }
