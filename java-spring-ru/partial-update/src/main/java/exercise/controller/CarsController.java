@@ -1,5 +1,6 @@
 package exercise.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +57,7 @@ public class CarsController {
     }
 
     @PutMapping(path = "/{id}")
-    public CarDTO update(@PathVariable long id, @RequestBody CarUpdateDTO carData) {
+    public CarDTO update(@PathVariable long id, @RequestBody @Valid CarUpdateDTO carData) {
 
         var car =  carRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Car with id " + id + " not found"));

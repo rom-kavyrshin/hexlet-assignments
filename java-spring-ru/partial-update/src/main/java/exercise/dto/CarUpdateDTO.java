@@ -1,6 +1,6 @@
 package exercise.dto;
 
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +16,7 @@ public class CarUpdateDTO {
 
     private JsonNullable<String> manufacturer;
 
+    @PositiveOrZero
     private JsonNullable<Integer> enginePower;
 }
 // END
