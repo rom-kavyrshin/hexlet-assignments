@@ -1,6 +1,7 @@
 package exercise.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import exercise.dto.TaskCreateDTO;
 import exercise.dto.TaskDTO;
@@ -53,8 +54,16 @@ public class TasksController {
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
     public TaskDTO create(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
+        var assigneeId = taskCreateDTO.getAssigneeId();
+
         var task = taskMapper.map(taskCreateDTO);
-        taskRepository.save(task);
+        var user = userRepository.findById(assigneeId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + assigneeId + " not found"));
+
+        user.addTask(task);
+
+        userRepository.save(user);
+
         return taskMapper.map(task);
     }
 
@@ -62,6 +71,19 @@ public class TasksController {
     public TaskDTO update(@PathVariable long id, @Valid @RequestBody TaskUpdateDTO taskUpdateDTO) {
         var task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+
+        if (taskUpdateDTO.getAssigneeId() != task.getAssignee().getId()) {
+            var newAssigneeId = taskUpdateDTO.getAssigneeId();
+
+            var oldAssignee = task.getAssignee();
+            var newAssignee = userRepository.findById(newAssigneeId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User with id " + newAssigneeId + " not found"));
+
+            oldAssignee.removeTask(task);
+            newAssignee.addTask(task);
+            userRepository.save(oldAssignee);
+            userRepository.save(newAssignee);
+        }
 
         taskMapper.update(taskUpdateDTO, task);
         taskRepository.save(task);
@@ -72,6 +94,15 @@ public class TasksController {
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+
+        Optional.ofNullable(task.getAssignee())
+                .ifPresent(user -> {
+                    user.removeTask(task);
+                    userRepository.save(user);
+                });
+
         taskRepository.deleteById(id);
     }
 
