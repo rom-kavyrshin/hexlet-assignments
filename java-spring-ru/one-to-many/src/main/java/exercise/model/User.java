@@ -45,6 +45,7 @@ public class User {
     private LocalDate createdAt;
 
     // BEGIN
-    
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> tasks = new ArrayList<>();
     // END
 }
