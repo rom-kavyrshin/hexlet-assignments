@@ -1,5 +1,7 @@
 package exercise.controller;
 
+import exercise.dto.TaskDTO;
+import exercise.mapper.TaskMapper;
 import exercise.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     @GetMapping(path = "")
     public List<UserDTO> index() {
         var users = userRepository.findAll();
@@ -43,6 +48,15 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         var userDto = userMapper.map(user);
         return userDto;
+    }
+
+    @GetMapping(path = "/{id}/tasks")
+    public List<TaskDTO> userTasks(@PathVariable long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"))
+                .getTasks().stream()
+                .map(taskMapper::map)
+                .toList();
     }
 
     @PostMapping(path = "")
