@@ -25,13 +25,51 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
-    @Autowired
-    private ProductRepository productRepository;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    // BEGIN
-    
+    public ProductsController(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
+    @GetMapping(path = "")
+    public List<ProductDTO> index() {
+        return productRepository.findAll().stream()
+                .map(productMapper::map)
+                .toList();
+    }
+
+    @GetMapping(path = "/{id}")
+    public ProductDTO show(@PathVariable long id) {
+        return productRepository.findById(id)
+                .map(productMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
+    }
+
+    @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDTO create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
+        var product = productMapper.map(productCreateDTO);
+        productRepository.save(product);
+        return productMapper.map(product);
+    }
+
+    @PutMapping(path = "/{id}")
+    public ProductDTO update(@PathVariable long id, @Valid @RequestBody ProductUpdateDTO productUpdateDTO) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
+        productMapper.update(productUpdateDTO, product);
+        productRepository.save(product);
+
+        return productMapper.map(product);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id) {
+        productRepository.deleteById(id);
+    }
     // END
 }
