@@ -33,15 +33,15 @@ public class Product implements BaseEntity {
     @NotNull
     private int price;
 
-    @CreatedDate
-    private LocalDate createdAt;
-
-    @LastModifiedDate
-    private LocalDate updatedAt;
-
     @NotNull
     @ManyToOne
     private Category category;
 
     private Double rating;
+
+    @CreatedDate
+    private LocalDate createdAt;
+
+    @LastModifiedDate
+    private LocalDate updatedAt;
 }

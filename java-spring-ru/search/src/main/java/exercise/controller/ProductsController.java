@@ -29,15 +29,25 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
-    @Autowired
-    private ProductRepository productRepository;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+    private final ProductSpecification productSpecification;
 
-    // BEGIN
-    
-    // END
+    public ProductsController(ProductRepository productRepository, ProductMapper productMapper, ProductSpecification productSpecification) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+        this.productSpecification = productSpecification;
+    }
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductDTO> index(ProductParamsDTO productParamsDTO, @RequestParam(defaultValue = "1") int page) {
+        return productRepository
+                .findAll(productSpecification.build(productParamsDTO), PageRequest.of(page - 1, 10))
+                .map(productMapper::map)
+                .toList();
+    }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
