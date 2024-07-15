@@ -87,7 +87,7 @@ class ProductsControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray().allSatisfy(element ->
+        assertThatJson(body).isArray().isNotEmpty().allSatisfy(element ->
                 assertThatJson(element)
                         .and(v -> v.node("title").asString().containsIgnoringCase("lamp"))
         );
