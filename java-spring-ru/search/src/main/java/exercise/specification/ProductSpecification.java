@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import exercise.dto.ProductParamsDTO;
 import exercise.model.Product;
 
+import java.util.Locale;
+
 
 @Component
 public class ProductSpecification {
@@ -23,7 +25,7 @@ public class ProductSpecification {
     }
 
     private Specification<Product> withTitleContain(String title) {
-        return (root, query, cb) -> title == null ? cb.conjunction() : cb.like(root.get("title"), title);
+        return (root, query, cb) -> title == null ? cb.conjunction() : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase(Locale.ROOT) + "%");
     }
 
     private Specification<Product> withPriceLessThan(Integer priceLessThan) {
