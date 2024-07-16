@@ -13,7 +13,43 @@ import java.util.List;
 
 @Service
 public class BookService {
-    // BEGIN
-    
-    // END
+
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
+
+    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+        this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
+    }
+
+    public List<BookDTO> index() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::map)
+                .toList();
+    }
+
+    public BookDTO create(BookCreateDTO bookData) {
+        var book = bookMapper.map(bookData);
+        bookRepository.save(book);
+        return bookMapper.map(book);
+    }
+
+    public BookDTO show(Long id) {
+        return bookRepository.findById(id)
+                .map(bookMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not Found: " + id));
+    }
+
+    public BookDTO update(BookUpdateDTO bookData, Long id) {
+        var book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not Found: " + id));
+
+        bookMapper.update(bookData, book);
+        bookRepository.save(book);
+        return bookMapper.map(book);
+    }
+
+    public void destroy(Long id) {
+        bookRepository.deleteById(id);
+    }
 }
