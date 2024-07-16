@@ -1,8 +1,11 @@
 package exercise.mapper;
 
+import exercise.dto.AuthorCreateDTO;
+import exercise.dto.AuthorDTO;
 import exercise.dto.BookCreateDTO;
 import exercise.dto.BookDTO;
 import exercise.dto.BookUpdateDTO;
+import exercise.model.Author;
 import exercise.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,9 +22,13 @@ import org.mapstruct.ReportingPolicy;
 )
 public abstract class BookMapper {
 
-    // BEGIN
-    
-    // END
+    @Mapping(target = "author", source = "authorId")
+    public abstract Book map(BookCreateDTO dto);
+
+    @Mapping(target = "authorId", source = "author.id")
+    @Mapping(target = "authorFirstName", source = "author.firstName")
+    @Mapping(target = "authorLastName", source = "author.lastName")
+    public abstract BookDTO map(Book dto);
 
     @Mapping(target = "author", source = "authorId")
     public abstract void update(BookUpdateDTO dto, @MappingTarget Book model);
