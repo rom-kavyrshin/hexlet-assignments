@@ -11,12 +11,20 @@ public class UserUtils {
     @Autowired
     private UserRepository userRepository;
 
-    // BEGIN
-    
-    // END
+    public User getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        var email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User " + email + " not found"));
+    }
 
     public User getTestUser() {
-        return  userRepository.findByEmail("hexlet@example.com")
+        return userRepository.findByEmail("hexlet@example.com")
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

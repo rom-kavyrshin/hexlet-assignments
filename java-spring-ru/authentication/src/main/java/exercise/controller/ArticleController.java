@@ -40,10 +40,6 @@ public class ArticleController {
     private UserUtils userUtils;
 
 
-    // BEGIN
-    
-    // END
-
     @GetMapping("")
     List<ArticleDTO> index() {
         var tasks = articleRepository.findAll();
@@ -53,12 +49,20 @@ public class ArticleController {
                 .toList();
     }
 
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ArticleDTO show(@PathVariable Long id) {
         var article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+        return articleMapper.map(article);
+    }
+
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    ArticleDTO create(@Valid @RequestBody ArticleCreateDTO productData) {
+        var article = articleMapper.map(productData);
+        article.setAuthor(userUtils.getCurrentUser());
+        articleRepository.save(article);
         return articleMapper.map(article);
     }
 
