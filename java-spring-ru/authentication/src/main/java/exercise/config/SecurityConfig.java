@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import exercise.service.CustomUserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
