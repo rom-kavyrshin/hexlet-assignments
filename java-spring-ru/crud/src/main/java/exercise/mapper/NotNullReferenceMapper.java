@@ -1,6 +1,6 @@
 package exercise.mapper;
 
-import exercise.exception.ResourceNotFoundException;
+import exercise.exception.DependentResourceNotFoundException;
 import exercise.model.BaseEntity;
 import jakarta.persistence.EntityManager;
 import org.mapstruct.Mapper;
@@ -15,17 +15,17 @@ public abstract class NotNullReferenceMapper {
     @Autowired
     private EntityManager entityManager;
 
-    public <T extends BaseEntity> T toEntity(Long id, @TargetType Class<T> entityClass) throws ResourceNotFoundException {
+    public <T extends BaseEntity> T toEntity(Long id, @TargetType Class<T> entityClass) throws DependentResourceNotFoundException {
         if (id != null) {
             var entity = entityManager.find(entityClass, id);
 
             if (entity == null) {
-                throw new ResourceNotFoundException(entityClass.getSimpleName() + " with id " + id + " not found");
+                throw new DependentResourceNotFoundException(entityClass.getSimpleName() + " with id " + id + " not found");
             }
 
             return entity;
         } else {
-            throw new ResourceNotFoundException(entityClass.getSimpleName() + " with id " + id + " not found");
+            throw new DependentResourceNotFoundException(entityClass.getSimpleName() + " with id " + id + " not found");
         }
     }
 }
